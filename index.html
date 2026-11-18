@@ -375,13 +375,12 @@
   var bags={}; function bagPick(k,arr){ if(!bags[k]||!bags[k].length) bags[k]=shuffle(arr); return bags[k].pop(); }
 
   /* ---------- syllabes : progression ---------- */
-  function sylLevel(){ var n=done.syll; return n<6?0:n<16?1:n<32?2:3; }
+  function sylLevel(){ var n=done.syll; return n<8?0:n<20?1:2; }
   function sylPool(){
     var V=['a','i','o','u'], L=sylLevel(), cons;
-    if(L===0) return V.slice();
-    cons=L===1?['m','p','l']:L===2?['m','p','l','r','s','t','f','n']:['m','p','l','r','s','t','f','n','b','d','v','j'];
+    cons=L===0?['m','p','l']:L===1?['m','p','l','r','s','t','f','n']:['m','p','l','r','s','t','f','n','b','d','v','j'];
     var pool=[]; cons.forEach(function(c){ V.forEach(function(v){ pool.push(c+v); }); });
-    return L===1?pool.concat(V):pool;
+    return pool;
   }
   function sylDistractor(){
     var pool=sylPool().filter(function(s){return s!==target.key});
@@ -393,9 +392,15 @@
   }
 
   /* ---------- voix & sons ---------- */
-  function pickVoice(){ try{ var vs=speechSynthesis.getVoices()||[]; voice=vs.filter(function(v){return /^fr/i.test(v.lang)})[0]||null; }catch(e){} }
+  function pickVoice(){ try{ var vs=(speechSynthesis.getVoices()||[]).filter(function(v){return /^fr/i.test(v.lang)});
+    function score(v){ var n=v.name+' '+(v.voiceURI||''), sc=0;
+      if(/natural|neural|online|premium|enhanced|am[eé]lie|audrey|marie|denise|eloise|google/i.test(n)) sc+=3;
+      if(/am[eé]lie|audrey|marie|denise|eloise|google fran|female|femme/i.test(n)) sc+=2;
+      if(/compact|espeak/i.test(n)) sc-=3;
+      if(/fr[-_]FR/i.test(v.lang)) sc+=1; if(!v.localService) sc+=1; return sc; }
+    vs.sort(function(a,b){return score(b)-score(a)}); voice=vs[0]||null; }catch(e){} }
   try{pickVoice(); speechSynthesis.onvoiceschanged=pickVoice;}catch(e){}
-  function say(t){ try{ speechSynthesis.cancel(); var u=new SpeechSynthesisUtterance(t); u.lang='fr-FR'; if(voice)u.voice=voice; u.rate=.85; u.pitch=1.15; speechSynthesis.speak(u);}catch(e){} }
+  function say(t){ try{ if(!voice)pickVoice(); speechSynthesis.cancel(); var u=new SpeechSynthesisUtterance(t); u.lang='fr-FR'; if(voice)u.voice=voice; u.rate=.92; u.pitch=1.1; u.volume=1; speechSynthesis.speak(u);}catch(e){} }
   function ctx(){ try{ audioCtx=audioCtx||new (window.AudioContext||window.webkitAudioContext)(); if(audioCtx.state==='suspended')audioCtx.resume(); }catch(e){} return audioCtx; }
   function tone(type,f0,f1,dur,vol,delay){
     var c=ctx(); if(!c) return; var t=c.currentTime+(delay||0), o=c.createOscillator(), g=c.createGain();
@@ -573,9 +578,10 @@
     var N=target.key, trk=$('trk'); trk.innerHTML=''; T.N=N; T.loaded=0; T.landed=0; T.busy=true; T.slots=[];
     var road=document.createElement('div'); road.id='road'; road.style.top=(H*.64)+'px'; road.style.height=(H*.1)+'px'; trk.appendChild(road);
     /* champ de petits dinosaures */
-    var fw=Math.max(62,Math.min(W/11,H/12,104)), fh=fw*.7; T.fw=fw;
+    var fw=Math.max(62,Math.min(W/11,H/12,104)), fh, cols2, rowsMax;
     var fl=W*.03, ft=H*.775, FW=W-2*fl, FH=H*.985-ft;
-    var cols2=Math.max(4,Math.floor(FW/(fw*1.05))), rowsMax=Math.max(1,Math.floor(FH/(fh+10)));
+    for(;;){ fh=fw*.7; cols2=Math.max(4,Math.floor(FW/(fw*1.05))); rowsMax=Math.max(1,Math.floor(FH/(fh+6))); if(cols2*rowsMax>=N+4||fw<=30) break; fw-=3; }
+    T.fw=fw;
     var M=Math.min(N+9,cols2*rowsMax), rows=Math.ceil(M/cols2), cellW=FW/cols2, cellH=FH/rows;
     var cells=[]; for(var i=0;i<cols2*rows;i++) cells.push(i); cells=shuffle(cells);
     var order=shuffle(SPKEYS.concat(SPKEYS,SPKEYS));
