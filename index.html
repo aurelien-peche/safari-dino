@@ -202,7 +202,9 @@
 
   function trexLike(p,o){
     o=o||{};
-    var s='<g class="tailw"><path d="M205 98 Q258 110 294 84 Q288 126 252 148 Q220 160 196 150Z" fill="'+p.b+'"/></g>';
+    var s='';
+    if(o.sail){ s+='<path d="M96 70 Q110 -6 150 6 Q190 -8 232 82 Q160 60 96 70Z" fill="'+o.sail+'"/><path d="M118 62 L124 22 M146 56 L150 14 M176 56 L186 18 M204 66 L216 34" stroke="'+p.dd+'" stroke-width="3" fill="none"/>'; }
+    s+='<g class="tailw"><path d="M205 98 Q258 110 294 84 Q288 126 252 148 Q220 160 196 150Z" fill="'+p.b+'"/></g>';
     if(o.crest){ for(var i=0;i<6;i++){ s+='<path d="M'+(110+i*20)+' '+(70+Math.abs(i-2.5)*4)+' l8 -'+(24-Math.abs(i-2.5)*2)+' l9 '+(24-Math.abs(i-2.5)*2)+'Z" fill="'+o.crest+'"/>'; } }
     s+=leg(186,138,30,54,p.d,p.dd,'b');
     s+='<ellipse cx="165" cy="113" rx="63" ry="48" fill="'+p.b+'"/><ellipse cx="150" cy="132" rx="40" ry="26" fill="'+p.l+'"/>';
@@ -210,7 +212,12 @@
     s+=leg(138,138,32,54,p.b2||p.d,p.dd,'a');
     s+='<path d="M114 116 q-16 4 -20 18" stroke="'+p.d+'" stroke-width="10" fill="none" stroke-linecap="round"/><circle cx="93" cy="136" r="3" fill="#fff"/><circle cx="99" cy="139" r="3" fill="#fff"/>';
     s+='<ellipse cx="122" cy="90" rx="38" ry="42" fill="'+p.b+'"/>';
+    if(o.frill){ s+='<ellipse cx="112" cy="74" rx="34" ry="44" fill="'+o.frill+'"/>'; }
+    if(o.snout){ s+='<path d="M40 56 Q-2 64 2 82 Q8 98 52 98Z" fill="'+p.b+'"/><path d="M4 84 Q30 96 52 90" stroke="'+p.dd+'" stroke-width="3" fill="none"/>'; }
     s+='<ellipse cx="80" cy="68" rx="54" ry="37" fill="'+p.b+'"/><path d="M28 78 Q60 124 128 92 Q96 82 28 78Z" fill="'+p.b+'"/>';
+    if(o.crests){ s+='<path d="M44 44 Q58 2 84 34Z" fill="'+o.crests+'"/><path d="M66 40 Q86 -2 108 40Z" fill="'+o.crests+'"/>'; }
+    if(o.hornS){ s+='<path d="M84 34 L90 8 L100 36Z" fill="'+o.hornS+'"/><path d="M58 38 L56 14 L72 36Z" fill="'+o.hornS+'"/>'; }
+    if(o.stripes){ for(var k=0;k<4;k++){ s+='<path d="M'+(128+k*22)+' 72 q8 20 -2 44" stroke="'+o.stripes+'" stroke-width="7" fill="none" stroke-linecap="round"/>'; } }
     if(o.horns){ s+='<path d="M92 36 Q86 8 110 4 Q104 22 108 38Z" fill="'+o.horns+'"/><path d="M62 38 Q52 12 74 6 Q72 22 76 38Z" fill="'+o.horns+'"/>'; }
     s+='<path d="M30 80 Q78 104 124 90" stroke="'+p.dd+'" stroke-width="4" fill="none" stroke-linecap="round"/>';
     s+='<path d="M44 85 l4 9 l5 -7 M62 92 l4 9 l5 -8 M82 94 l4 9 l5 -8 M102 92 l3 8 l5 -8" fill="#fff"/>';
@@ -222,28 +229,28 @@
   var SP={
     trex:{name:'Tyrannosaure',ph:'Tyrannosaure',svg:function(){return trexLike({b:'#5bb86a',b2:'#4ea75e',d:'#3f9553',dd:'#2f7a41',l:'#dff3c2'});}},
     mega:{name:'Mégarex',ph:'Méga rex',svg:function(){return trexLike({b:'#a46ae8',b2:'#9358d8',d:'#7a3fc4',dd:'#5a2a9a',l:'#ffe08a'},{crest:'#22c7f0',horns:'#ff5fb0',spots:'#ff9bd0'});}},
-    tric:{name:'Tricératops',ph:'Tricératops',svg:function(){var b='#6aaee8',d='#4283c4',dd='#2f66a0',l='#d3e9fb';
+    tric:{name:'Tricératops',ph:'Tricératops',svg:function(q){q=q||{};var b=q.b||'#6aaee8',d=q.d||'#4283c4',dd=q.dd||'#2f66a0',l=q.l||'#d3e9fb',fr=q.fr||'#f08a5d',sps='';if(q.spikes){for(var a=-160;a<=30;a+=26){var r=a*Math.PI/180,x=108+Math.cos(r)*46,y=96+Math.sin(r)*52;sps+='<path d="M'+(x-5)+' '+(y+4)+' L'+(108+Math.cos(r)*70)+' '+(96+Math.sin(r)*78)+' L'+(x+5)+' '+(y-2)+'Z" fill="#fff4d6"/>';}}
       return wrap('<path d="M238 118 Q278 126 292 150 Q268 152 232 146Z" fill="'+b+'"/>'+leg(196,140,30,52,d,dd,'b')+leg(106,140,30,52,d,dd,'a')
        +'<ellipse cx="170" cy="124" rx="82" ry="50" fill="'+b+'"/><ellipse cx="165" cy="146" rx="52" ry="24" fill="'+l+'"/>'
-       +leg(164,142,30,50,'#5a9cd8',dd,'a')+leg(74,142,28,50,'#5a9cd8',dd,'b')
-       +'<ellipse cx="108" cy="96" rx="46" ry="52" fill="#f08a5d"/><g fill="#ffd1b5"><circle cx="82" cy="62" r="6"/><circle cx="108" cy="52" r="6"/><circle cx="134" cy="62" r="6"/><circle cx="148" cy="86" r="6"/><circle cx="68" cy="84" r="6"/></g>'
+       +leg(164,142,30,50,(q.d2||'#5a9cd8'),dd,'a')+leg(74,142,28,50,(q.d2||'#5a9cd8'),dd,'b')
+       +sps+'<ellipse cx="108" cy="96" rx="46" ry="52" fill="'+fr+'"/><g fill="#ffd1b5"><circle cx="82" cy="62" r="6"/><circle cx="108" cy="52" r="6"/><circle cx="134" cy="62" r="6"/><circle cx="148" cy="86" r="6"/><circle cx="68" cy="84" r="6"/></g>'
        +'<ellipse cx="78" cy="128" rx="46" ry="34" fill="'+b+'"/><path d="M38 132 q-18 2 -16 14 q12 8 30 -2Z" fill="#ffe08a"/>'
        +'<path d="M60 108 L34 54 L74 100Z" fill="#fff4d6"/><path d="M92 104 L100 48 L108 104Z" fill="#fff4d6"/><path d="M44 120 L22 100 L52 132Z" fill="#fff4d6"/>'
        +eye(72,114,9)+'<path d="M54 140 Q68 148 82 140" stroke="'+dd+'" stroke-width="3.5" fill="none" stroke-linecap="round"/>');}},
-    steg:{name:'Stégosaure',ph:'Stégosaure',svg:function(){var b='#f3a63e',d='#d98a22',dd='#a96a14',l='#ffe3b0',pl='#e5533d';
+    steg:{name:'Stégosaure',ph:'Stégosaure',svg:function(q){q=q||{};var b=q.b||'#f3a63e',d=q.d||'#d98a22',dd=q.dd||'#a96a14',l=q.l||'#ffe3b0',pl=q.pl||'#e5533d';
       var pls=''; [[112,100],[140,86],[170,82],[200,88],[228,102]].forEach(function(q){pls+='<path d="M'+(q[0]-17)+' '+(q[1]+12)+' L'+q[0]+' '+(q[1]-26)+' L'+(q[0]+17)+' '+(q[1]+12)+'Z" fill="'+pl+'"/>';});
       return wrap('<path d="M240 130 Q284 126 294 98 Q280 150 236 156Z" fill="'+b+'"/><path d="M268 122 l8 -26 l8 28Z M284 114 l10 -22 l4 28Z" fill="#ffe3b0"/>'+pls
        +leg(196,140,30,52,d,dd,'b')+leg(100,142,28,50,d,dd,'a')+'<ellipse cx="170" cy="136" rx="88" ry="44" fill="'+b+'"/><ellipse cx="160" cy="154" rx="52" ry="20" fill="'+l+'"/>'
        +leg(160,144,30,48,'#e49a30',dd,'a')+leg(68,146,26,46,'#e49a30',dd,'b')
        +'<ellipse cx="98" cy="146" rx="30" ry="30" fill="'+b+'"/><ellipse cx="64" cy="158" rx="32" ry="22" fill="'+b+'"/>'
        +eye(60,150,8.5)+'<path d="M40 168 Q58 176 76 166" stroke="'+dd+'" stroke-width="3.5" fill="none" stroke-linecap="round"/><circle cx="36" cy="156" r="2.6" fill="'+dd+'"/>');}},
-    dipl:{name:'Diplodocus',ph:'Diplodocus',svg:function(){var b='#f4c63f',d='#dba323',dd='#a87a10',l='#fff0b3';
+    dipl:{name:'Diplodocus',ph:'Diplodocus',svg:function(q){q=q||{};var b=q.b||'#f4c63f',d=q.d||'#dba323',dd=q.dd||'#a87a10',l=q.l||'#fff0b3',hd=q.tall?'translate(38,-14)':'translate(0,0)',nk=q.tall?'M128 116 Q112 70 98 24':'M128 116 Q96 92 78 42',sp=q.sp||'#e89a2e';
       return wrap('<path d="M246 132 Q282 148 292 190" stroke="'+b+'" stroke-width="24" fill="none" stroke-linecap="round"/>'
        +leg(206,148,28,44,d,dd,'b')+leg(122,148,28,44,d,dd,'a')+'<ellipse cx="184" cy="138" rx="72" ry="46" fill="'+b+'"/><ellipse cx="176" cy="156" rx="46" ry="22" fill="'+l+'"/>'
        +leg(160,150,28,42,'#e8b52e',dd,'a')+leg(92,152,26,40,'#e8b52e',dd,'b')
-       +'<path d="M128 116 Q96 92 78 42" stroke="'+b+'" stroke-width="36" fill="none" stroke-linecap="round"/><ellipse cx="62" cy="34" rx="28" ry="19" fill="'+b+'"/>'
-       +'<g fill="#e89a2e"><circle cx="170" cy="112" r="7"/><circle cx="196" cy="108" r="6"/><circle cx="214" cy="126" r="7"/><circle cx="150" cy="124" r="5"/><circle cx="108" cy="82" r="6"/></g>'
-       +eye(56,29,8)+'<path d="M40 44 Q56 52 70 44" stroke="'+dd+'" stroke-width="3.2" fill="none" stroke-linecap="round"/><circle cx="38" cy="30" r="2.4" fill="'+dd+'"/>');}},
+       +'<path d="'+nk+'" stroke="'+b+'" stroke-width="36" fill="none" stroke-linecap="round"/><g transform="'+hd+'"><ellipse cx="62" cy="34" rx="28" ry="19" fill="'+b+'"/></g>'
+       +'<g fill="'+sp+'"><circle cx="170" cy="112" r="7"/><circle cx="196" cy="108" r="6"/><circle cx="214" cy="126" r="7"/><circle cx="150" cy="124" r="5"/><circle cx="108" cy="82" r="6"/></g>'
+       +'<g transform="'+hd+'">'+eye(56,29,8)+'<path d="M40 44 Q56 52 70 44" stroke="'+dd+'" stroke-width="3.2" fill="none" stroke-linecap="round"/><circle cx="38" cy="30" r="2.4" fill="'+dd+'"/></g>');}},
     rapt:{name:'Vélociraptor',ph:'Vélociraptor',svg:function(){var b='#8e6bd9',d='#6a47b8',dd='#47298a',l='#e6dcff';
       return wrap('<g class="tailw"><path d="M212 106 Q262 102 296 126 Q262 134 214 134Z" fill="'+b+'"/></g>'
        +'<g class="lw b"><path d="M184 126 L198 160 L190 190" stroke="'+d+'" stroke-width="18" fill="none" stroke-linecap="round" stroke-linejoin="round"/><path d="M178 194 l-22 2 l8 -8 l10 2Z" fill="#fff4d6"/><ellipse cx="180" cy="194" rx="22" ry="8" fill="'+dd+'"/></g>'
@@ -255,12 +262,12 @@
        +'<ellipse cx="94" cy="58" rx="36" ry="22" fill="'+b+'" transform="rotate(-8 94 58)"/><path d="M62 62 Q50 70 56 76 Q80 82 104 72Z" fill="'+b+'"/>'
        +'<path d="M56 68 Q80 82 106 72" stroke="'+dd+'" stroke-width="3.6" fill="none" stroke-linecap="round"/><path d="M66 71 l3 7 l4 -6 M80 76 l3 7 l4 -6" fill="#fff"/>'
        +eye(98,50,9)+'<circle cx="56" cy="58" r="2.6" fill="'+dd+'"/><path d="M88 38 q10 -8 22 -2" stroke="'+dd+'" stroke-width="3.2" fill="none" stroke-linecap="round"/>');}},
-    ptera:{name:'Ptéranodon',ph:'Ptéranodon',fly:true,svg:function(){var b='#e4607c',w='#f59bb0',wd='#e07890',l='#ffd5de',dd='#a02e49';
+    ptera:{name:'Ptéranodon',ph:'Ptéranodon',fly:true,svg:function(q){q=q||{};var b=q.b||'#e4607c',w=q.w||'#f59bb0',wd=q.wd||'#e07890',l=q.l||'#ffd5de',dd=q.dd||'#a02e49',cr=q.cr||'#c43d5c';
       return wrap('<g class="wing far"><path d="M158 100 Q130 10 36 24 Q82 62 120 112Z" fill="'+wd+'"/></g>'
        +'<path d="M196 112 l44 8 l-44 12Z" fill="'+b+'"/><ellipse cx="160" cy="114" rx="42" ry="22" fill="'+b+'"/><ellipse cx="156" cy="124" rx="26" ry="11" fill="'+l+'"/>'
        +'<path d="M120 138 l-8 18 l12 -4 M138 140 l-6 18 l12 -6" stroke="'+dd+'" stroke-width="5" fill="none" stroke-linecap="round"/>'
        +'<ellipse cx="100" cy="98" rx="30" ry="15" fill="'+b+'"/><path d="M80 94 L6 106 L80 108Z" fill="#f08aa2"/>'
-       +'<path d="M112 90 Q140 52 160 74 Q130 76 120 104Z" fill="#c43d5c"/>'
+       +'<path d="M112 90 Q140 52 160 74 Q130 76 120 104Z" fill="'+cr+'"/>'
        +'<g class="wing"><path d="M164 100 Q196 6 286 22 Q242 62 190 114Z" fill="'+w+'"/><path d="M196 92 Q226 44 270 30" stroke="'+wd+'" stroke-width="3" fill="none"/></g>'
        +eye(94,94,8.5)+'<path d="M60 104 Q74 112 90 106" stroke="'+dd+'" stroke-width="3" fill="none" stroke-linecap="round"/>');}},
     anky:{name:'Ankylosaure',ph:'Ankylosaure',svg:function(){var b='#b98a5e',d='#9a6b42',dd='#6e4a28',l='#f0d9b8',ar='#7b5233';
@@ -270,9 +277,27 @@
        +leg(160,152,28,40,'#a87a4e',dd,'a')+leg(72,154,26,38,'#a87a4e',dd,'b')+bumps
        +'<path d="M252 130 l10 -20 l6 22Z M232 112 l8 -22 l8 24Z M76 120 l-6 -20 l14 14Z" fill="#f7e1ac"/>'
        +'<ellipse cx="68" cy="156" rx="34" ry="24" fill="'+b+'"/><path d="M40 150 q-6 12 6 22 q14 6 26 0" fill="'+d+'"/>'
-       +eye(62,150,8.5)+'<path d="M42 166 Q60 176 80 166" stroke="'+dd+'" stroke-width="3.5" fill="none" stroke-linecap="round"/>');}}
+       +eye(62,150,8.5)+'<path d="M42 166 Q60 176 80 166" stroke="'+dd+'" stroke-width="3.5" fill="none" stroke-linecap="round"/>');}},
+    spino:{name:'Spinosaure',ph:'Spinosaure',svg:function(){return trexLike({b:'#3fa9a0',b2:'#35958d',d:'#2a7f78',dd:'#1d5f5a',l:'#ffe9a8'},{sail:'#ff8a3d',snout:1});}},
+    dilo:{name:'Dilophosaure',ph:'Dilophosaure',svg:function(){return trexLike({b:'#7cc04a',b2:'#6bb03a',d:'#559a2e',dd:'#3d7a1f',l:'#f4f6b8'},{crests:'#ff5a4f',frill:'#ffb21f'});}},
+    carno:{name:'Carnotaure',ph:'Carnotaure',svg:function(){return trexLike({b:'#e0603f',b2:'#cf5233',d:'#b54226',dd:'#8a2f18',l:'#ffd9a6'},{hornS:'#fff0c8',stripes:'#8a2f18'});}},
+    allo:{name:'Allosaure',ph:'Allosaure',svg:function(){return trexLike({b:'#c99a5b',b2:'#b98a4b',d:'#a07038',dd:'#774f22',l:'#f6e6c4'},{stripes:'#7a4a22',hornS:'#7a4a22'});}},
+    gigano:{name:'Giganotosaure',ph:'Giganotosaure',svg:function(){return trexLike({b:'#6f8fb8',b2:'#5f7fa8',d:'#4a6a94',dd:'#34506f',l:'#e3ecf7'},{crest:'#2f4a73'});}},
+    indo:{name:'Indominus Rex',ph:'Indominus rex',svg:function(){return trexLike({b:'#f2efe6',b2:'#e6e1d3',d:'#cfc9b6',dd:'#8e8873',l:'#fffdf5'},{crest:'#b7b09a',spots:'#d8d2bd'});}},
+    brach:{name:'Brachiosaure',ph:'Brachiosaure',svg:function(){return SP.dipl.svg({b:'#7bb8e8',d:'#5a9ad0',dd:'#3a6f9e',l:'#e0f1ff',sp:'#3b82c4',tall:1});}},
+    para:{name:'Parasaurolophus',ph:'Parasaurolophus',svg:function(){var b='#3dbf9f',d='#2a9a80',dd='#1c6f5c',l='#d4f7ea',c='#ff8a3d';
+      return wrap('<path d="M240 128 Q284 138 296 172 Q268 162 234 156Z" fill="'+b+'"/>'+leg(196,142,30,50,d,dd,'b')+leg(112,142,28,50,d,dd,'a')
+       +'<ellipse cx="170" cy="128" rx="80" ry="46" fill="'+b+'"/><ellipse cx="162" cy="150" rx="50" ry="20" fill="'+l+'"/>'
+       +leg(156,146,28,46,'#34b090',dd,'a')+'<ellipse cx="102" cy="96" rx="34" ry="42" fill="'+b+'"/>'
+       +'<path d="M70 40 Q118 -6 176 22 Q150 22 128 36 Q108 50 98 62Z" fill="'+c+'"/>'
+       +'<ellipse cx="72" cy="66" rx="40" ry="27" fill="'+b+'"/><path d="M36 70 Q14 74 22 88 Q46 94 64 86Z" fill="'+d+'"/>'
+       +'<g fill="'+c+'"><circle cx="150" cy="104" r="6"/><circle cx="176" cy="98" r="6"/><circle cx="200" cy="108" r="6"/></g>'
+       +eye(74,58,9)+'<path d="M40 82 Q58 92 78 84" stroke="'+dd+'" stroke-width="3.2" fill="none" stroke-linecap="round"/>');}},
+    styra:{name:'Styracosaure',ph:'Styracosaure',svg:function(){return SP.tric.svg({b:'#e8a23c',d:'#c47f1f',dd:'#8f5a10',d2:'#d98f2a',l:'#ffe9b8',fr:'#d6453d',spikes:1});}},
+    kentro:{name:'Kentrosaure',ph:'Kentrosaure',svg:function(){return SP.steg.svg({b:'#8e6bd9',d:'#6a47b8',dd:'#47298a',l:'#e6dcff',pl:'#2ec4b6'});}},
+    quetz:{name:'Quétzalcoatlus',ph:'Quétzalcoatlus',fly:true,svg:function(){return SP.ptera.svg({b:'#4fb0a8',w:'#8ddbd2',wd:'#5fb8ae',l:'#d9f7f2',dd:'#216e68',cr:'#f2a33a'});}}
   };
-  var SPKEYS=['trex','tric','steg','dipl','rapt','ptera','anky','mega'];
+  var SPKEYS=['trex','tric','steg','dipl','rapt','ptera','anky','mega','spino','dilo','carno','allo','gigano','indo','brach','para','styra','kentro','quetz'];
   // (correction syntaxe) palette locale
   /* =====================  EXPLORATEUR  ===================== */
   var HERO='<svg viewBox="0 0 150 200" xmlns="http://www.w3.org/2000/svg"><g class="bobber">'
@@ -459,7 +484,7 @@
     $('world').appendChild(el); position(d,0); dinos.push(d); return d;
   }
   function position(d,t){
-    var y=d.fy-d.h; if(d.sp==='ptera') y+=Math.sin(t/650+d.ph)*AMP[lvl()];
+    var y=d.fy-d.h; if(SP[d.sp].fly) y+=Math.sin(t/650+d.ph)*AMP[lvl()];
     d.el.style.transform='translate3d('+d.x+'px,'+y+'px,0) scale('+d.scale+')';
     if(!d.done){ d.op=Math.max(0,Math.min(1,(d.x+d.w*.55-heroR)/(d.w*.3))); d.el.style.opacity=d.op; }
   }
@@ -471,7 +496,7 @@
       key=forceTarget?target.key:pick(SPKEYS.filter(function(k){return k!==target.key||Math.random()<.2}));
       species=key;
     } else {
-      species=pick(lvl()>=1?SPKEYS.concat(['ptera','ptera']):SPKEYS);
+      species=pick(lvl()>=1?SPKEYS.concat(['ptera','quetz']):SPKEYS);
       if(mode==='letters'){ kind='letter'; key=forceTarget?target.key:pick(LET.filter(function(l){return l!==target.key})); }
       else if(mode==='syll'){ kind='syll'; key=forceTarget?target.key:sylDistractor(); }
     }
@@ -506,7 +531,7 @@
     else if(mode==='dinos') target={key:bagPick('D',SPKEYS)};
     else if(mode==='trucks') target={key:bagPick('T',[7,8,9,10,11,12])};
     else if(mode==='fish'){ var all=[]; MSP.forEach(function(s){MCOL.forEach(function(c,i){all.push(s+':'+i)})}); var t=bagPick('F',all).split(':'); target={sp:t[0],col:+t[1]}; }
-    renderTarget();
+    skipLeft=Math.floor(rnd(0,4)); renderTarget();
     var pre=''; if(isShoot()&&lvl()>lastLvl[mode]){ lastLvl[mode]=lvl(); pre='Attention, les dinos vont plus vite ! '; }
     say(pre+promptText()); idleT=0;
     if(mode==='trucks') newTruckRound();
@@ -731,7 +756,7 @@
   }
 
   /* ---------- boucle ---------- */
-  var last=performance.now();
+  var skipLeft=0, last=performance.now();
   function tick(ts){
     var dt=Math.min(.05,(ts-last)/1000); last=ts;
     if(!paused){
@@ -741,8 +766,8 @@
         spawnT-=dt;
         var onscreen=dinos.filter(function(d){return !d.done&&d.x<W}).length;
         if(spawnT<=0 && onscreen<(mode===null?3:MAXD[lvl()])){
-          var need=mode&&target&&!targetAlive();
-          if(spawn(need)) spawnT=rnd(2.4,3.8)*(mode===null?1.2:GAP[lvl()]); else spawnT=.5;
+          var need=mode&&target&&!targetAlive()&&skipLeft<=0, ok=spawn(need);
+          if(ok){ if(mode&&target&&!need&&!targetAlive()&&skipLeft>0) skipLeft--; spawnT=rnd(2.4,3.8)*(mode===null?1.2:GAP[lvl()]); } else spawnT=.5;
         } else if(mode&&target&&!targetAlive()&&spawnT>.9) spawnT=.9;
       }
       if(mode){ idleT+=dt; if(idleT>18){ idleT=0; speakTarget(); } }
@@ -762,7 +787,7 @@
     $('menu').classList.remove('show'); $('hud').style.display='flex'; spawnT=.3;
     if(m==='fish') buildSea();
     pickTarget();
-    if(SHOOT[m]) setTimeout(function(){ if(mode===m) spawn(true); },0);
+    if(SHOOT[m]) setTimeout(function(){ if(mode===m){ if(skipLeft>0){ spawn(false); skipLeft--; } else spawn(true); } },0);
   }
   function home(){
     try{speechSynthesis.cancel()}catch(e){}
