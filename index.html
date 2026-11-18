@@ -752,7 +752,7 @@
   }
   function fishPos(c,t){ c.el.style.transform='translate3d('+c.x+'px,'+(c.yc-c.h/2+Math.sin(t/800+c.ph)*10)+'px,0)'; }
   function isTargetFish(c){ return c.sp===target.sp&&c.col===target.col; }
-  function fishAlive(){ return F.list.some(function(c){return !c.done&&isTargetFish(c)&&c.x>-c.w*.6&&c.x<W-c.w*.2;}); }
+  function fishAlive(){ return F.list.some(function(c){return !c.done&&isTargetFish(c)&&c.x>-c.w*1.2&&c.x<W+c.w*1.2;}); }
   function fishSpawnTarget(){ F.spawnT=.2; setTimeout(function(){ if(mode==='fish'&&!fishAlive()) fishSpawn(true); },0); }
   function fishTick(dt,ts){
     for(var i=F.list.length-1;i>=0;i--){ var c=F.list[i]; if(c.done) continue;
