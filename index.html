@@ -392,15 +392,26 @@
   }
 
   /* ---------- voix & sons ---------- */
-  function pickVoice(){ try{ var vs=(speechSynthesis.getVoices()||[]).filter(function(v){return /^fr/i.test(v.lang)});
-    function score(v){ var n=v.name+' '+(v.voiceURI||''), sc=0;
-      if(/natural|neural|online|premium|enhanced|am[eé]lie|audrey|marie|denise|eloise|google/i.test(n)) sc+=3;
-      if(/am[eé]lie|audrey|marie|denise|eloise|google fran|female|femme/i.test(n)) sc+=2;
-      if(/compact|espeak/i.test(n)) sc-=3;
-      if(/fr[-_]FR/i.test(v.lang)) sc+=1; if(!v.localService) sc+=1; return sc; }
-    vs.sort(function(a,b){return score(b)-score(a)}); voice=vs[0]||null; }catch(e){} }
+  var voiceName=''; try{voiceName=localStorage.getItem('dino-voice')||'';}catch(e){}
+  function frVoices(){ try{ return (speechSynthesis.getVoices()||[]).filter(function(v){return /^fr/i.test(v.lang)}); }catch(e){ return []; } }
+  function pickVoice(){ var vs=frVoices(); voice=vs.filter(function(v){return v.name===voiceName})[0]||vs[0]||null; }
   try{pickVoice(); speechSynthesis.onvoiceschanged=pickVoice;}catch(e){}
-  function say(t){ try{ if(!voice)pickVoice(); speechSynthesis.cancel(); var u=new SpeechSynthesisUtterance(t); u.lang='fr-FR'; if(voice)u.voice=voice; u.rate=.92; u.pitch=1.1; u.volume=1; speechSynthesis.speak(u);}catch(e){} }
+  function say(t){ try{ if(!voice)pickVoice(); speechSynthesis.cancel(); var u=new SpeechSynthesisUtterance(t); u.lang='fr-FR'; if(voice)u.voice=voice; u.rate=.9; u.pitch=1; u.volume=1; speechSynthesis.speak(u);}catch(e){} }
+  function openVoicePanel(){
+    var vs=frVoices(), p=document.createElement('div');
+    p.style.cssText='position:fixed;inset:0;z-index:99;background:rgba(0,0,0,.6);display:flex;align-items:center;justify-content:center;font-family:sans-serif';
+    var box=document.createElement('div'); box.style.cssText='background:#fff;border-radius:18px;padding:18px;max-width:90vw;max-height:85vh;overflow:auto;min-width:min(440px,90vw)';
+    box.innerHTML='<h3 style="margin:0 0 10px">Choisir la voix (parents)</h3>'+(vs.length?'':'<p>Aucune voix française trouvée sur cet appareil. Installez-en une dans les réglages de synthèse vocale.</p>');
+    vs.forEach(function(v){ var b=document.createElement('button'); b.textContent=(v.name===(voice&&voice.name)?'✅ ':'🔈 ')+v.name+' ('+v.lang+')';
+      b.style.cssText='display:block;width:100%;text-align:left;font-size:18px;padding:12px;margin:6px 0;border-radius:10px;border:2px solid #ccc;background:#f6f6f6';
+      b.onclick=function(){ voiceName=v.name; try{localStorage.setItem('dino-voice',v.name);}catch(e){} voice=v; say('Bonjour Achille ! Cherche un tricératops vert !'); Array.prototype.forEach.call(box.querySelectorAll('button'),function(x){x.textContent=x.textContent.replace('✅ ','🔈 ');}); b.textContent=b.textContent.replace('🔈 ','✅ '); };
+      box.appendChild(b); });
+    var c=document.createElement('button'); c.textContent='Fermer'; c.style.cssText='margin-top:10px;font-size:18px;padding:12px 24px;border-radius:10px;border:0;background:#2d9d5c;color:#fff'; c.onclick=function(){p.remove();};
+    box.appendChild(c); p.appendChild(box); document.body.appendChild(p);
+  }
+  (function(){ var h=document.querySelector('#menu h1'), t=null; if(!h)return;
+    function dn(){ t=setTimeout(openVoicePanel,1200); } function up(){ clearTimeout(t); }
+    h.addEventListener('pointerdown',dn); h.addEventListener('pointerup',up); h.addEventListener('pointerleave',up); h.addEventListener('pointercancel',up); })();
   function ctx(){ try{ audioCtx=audioCtx||new (window.AudioContext||window.webkitAudioContext)(); if(audioCtx.state==='suspended')audioCtx.resume(); }catch(e){} return audioCtx; }
   function tone(type,f0,f1,dur,vol,delay){
     var c=ctx(); if(!c) return; var t=c.currentTime+(delay||0), o=c.createOscillator(), g=c.createGain();
@@ -537,7 +548,7 @@
     sBoing(); burst(x,y,['❔']); dropDart(dart,x,y,true);
     d.body.classList.remove('shk'); void d.body.offsetWidth; d.body.classList.add('shk');
     var now=performance.now(); if(now-lastWrongSay>1800){ lastWrongSay=now;
-      say('Ça, c\'est '+(mode==='dinos'?'un '+SP[d.sp].ph:sayKey(d.key))+'. Cherche '+(mode==='dinos'?'le '+SP[target.key].ph:sayKey(target.key))+' !'); }
+      say(mode==='dinos'?'Ça, c\'est un '+SP[d.sp].ph+'. Cherche le '+SP[target.key].ph+' !':'Cherche '+sayKey(target.key)+' !'); }
   }
   /* sticker qui s'envole vers le plateau */
   function giveSticker(html,cx,cy,slotHtml,onDone){
@@ -551,7 +562,7 @@
   function success(d,x,y,dart){
     d.done=true; dart.remove(); sPop(); sRoar(); burst(x,y,['⭐','✨','🌟']); confetti(10);
     var rect=d.el.getBoundingClientRect(), cx=rect.left+rect.width/2, cy=rect.top+rect.height*.6;
-    var p=pick(PRAISE); say(p+' '+(mode==='dinos'?'C\'est un '+SP[d.sp].ph+' !':(mode==='letters'?SND[d.key]:d.key)+' !'));
+    var p=pick(PRAISE); say(mode==='dinos'?p+' C\'est un '+SP[d.sp].ph+' !':p);
     d.el.style.transition='transform .35s cubic-bezier(.3,1.6,.5,1)'; d.el.style.transform=d.el.style.transform.replace(/scale\(([^)]*)\)/,function(_,s){return 'scale('+(parseFloat(s)*1.18)+')'});
     setTimeout(function(){ d.el.classList.add('gone'); },420); setTimeout(function(){removeDino(d)},1000);
     done[mode]++; saveProg(); idleT=0;
@@ -708,13 +719,13 @@
       if(c){ c.el.style.transform='translate3d('+(x-c.w/2)+'px,'+(y-c.h/2)+'px,0) scale('+(1-.55*e)+') rotate('+(Math.sin(k*20)*8)+'deg)'; } },end);
   }
   function catchFish(c,tx,ty){
-    c.done=true; sPop(); burst(tx,ty,['⭐','✨']); var p=pick(PRAISE); say(p+' Un '+MNAME[c.sp]+' '+MCOL[c.col][0]+' !'); confetti(8);
+    c.done=true; sPop(); burst(tx,ty,['⭐','✨']); var p=pick(PRAISE); say(p); confetti(8);
     reelBack(tx,ty,c,function(){ var tp=tipPos(); c.el.remove(); var i=F.list.indexOf(c); if(i>=0) F.list.splice(i,1); showLine(false); done.fish++; saveProg();
       giveSticker(MR(c.sp,c.col),tp.x,tp.y,null,function(){ F.busy=false; afterSticker(); }); });
   }
   function wrongFish(c,tx,ty){
     sBoing(); burst(tx,ty,['💦']); c.mb.classList.remove('shk'); void c.mb.offsetWidth; c.mb.classList.add('shk');
-    var now=performance.now(); if(now-lastWrongSay>1800){ lastWrongSay=now; say('Ça, c\'est un '+MNAME[c.sp]+' '+MCOL[c.col][0]+'. Cherche un '+MNAME[target.sp]+' '+MCOL[target.col][0]+' !'); }
+    var now=performance.now(); if(now-lastWrongSay>1800){ lastWrongSay=now; speakTarget(); }
     setTimeout(function(){ reelBack(tx,ty,null,function(){ showLine(false); c.frozen=false; c.flee=true; F.busy=false; }); },450);
   }
 
