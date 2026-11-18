@@ -344,8 +344,8 @@
 
   /* ---------- reptiles marins (recolorables) ---------- */
   var MCOL=[['vert','#3fbf62','#2a9a4a','#c9f2d3'],['violet','#9b5de5','#7a3fc4','#e6d6fb'],['bleu','#3b82f6','#2458b8','#d2e3ff'],['rouge','#ff5252','#c93030','#ffd4d4'],['jaune','#ffc61a','#d99a00','#fff2b8'],['rose','#ff7eb6','#d9559a','#ffdbea']];
-  var MSP=['plesio','mosa','ichtyo','plio'];
-  var MNAME={plesio:'plésiosaure',mosa:'mosasaure',ichtyo:'ichtyosaure',plio:'pliosaure'};
+  var MSP=['plesio','mosa','ichtyo','plio','elasmo','megalo','dunk','archelon','tylo'];
+  var MNAME={plesio:'plésiosaure',mosa:'mosasaure',ichtyo:'ichtyosaure',plio:'pliosaure',elasmo:'élasmosaure',megalo:'mégalodon',dunk:'dunkléostée',archelon:'archélon',tylo:'tylosaure'};
   function MR(sp,ci){
     var c=MCOL[ci], b=c[1], d=c[2], l=c[3], s='<svg viewBox="0 0 300 170" xmlns="http://www.w3.org/2000/svg">';
     if(sp==='plesio'){
@@ -370,6 +370,40 @@
        +'<path d="M134 64 Q162 30 192 66Z" fill="'+d+'"/><ellipse cx="136" cy="140" rx="32" ry="11" fill="'+d+'" transform="rotate(30 136 140)"/>'
        +eye(98,88,11)+'<path d="M60 108 Q90 122 120 112" stroke="'+d+'" stroke-width="3.4" fill="none" stroke-linecap="round"/>'
        +'<g fill="'+d+'" opacity=".5"><circle cx="150" cy="84" r="6"/><circle cx="178" cy="94" r="6"/><circle cx="204" cy="98" r="5"/></g>';
+    } else if(sp==='elasmo'){
+      s+='<path d="M236 114 Q270 122 292 104 Q284 140 240 134Z" fill="'+b+'"/>'
+       +'<ellipse cx="146" cy="150" rx="30" ry="10" fill="'+d+'" transform="rotate(-18 146 150)"/><ellipse cx="206" cy="150" rx="30" ry="10" fill="'+d+'" transform="rotate(18 206 150)"/>'
+       +'<ellipse cx="178" cy="112" rx="60" ry="34" fill="'+b+'"/><ellipse cx="174" cy="126" rx="40" ry="15" fill="'+l+'"/>'
+       +'<path d="M134 104 Q84 112 74 66 Q68 30 96 20" stroke="'+b+'" stroke-width="20" fill="none" stroke-linecap="round"/>'
+       +'<ellipse cx="92" cy="16" rx="24" ry="14" fill="'+b+'"/>'+eye(86,12,6.5)+'<path d="M70 22 Q88 30 106 22" stroke="'+d+'" stroke-width="3" fill="none" stroke-linecap="round"/>'
+       +'<g fill="'+d+'" opacity=".5"><circle cx="166" cy="100" r="5"/><circle cx="192" cy="98" r="5"/><circle cx="212" cy="110" r="5"/></g>';
+    } else if(sp==='megalo'){
+      s+='<path d="M232 100 Q266 66 292 38 Q280 96 296 150 Q266 124 232 110Z" fill="'+b+'"/>'
+       +'<ellipse cx="148" cy="102" rx="92" ry="36" fill="'+b+'"/><ellipse cx="140" cy="118" rx="64" ry="16" fill="'+l+'"/>'
+       +'<path d="M62 96 Q30 100 8 114 Q44 122 78 120Z" fill="'+b+'"/><path d="M130 70 L160 22 L190 72Z" fill="'+d+'"/>'
+       +'<path d="M120 122 L92 160 L158 130Z" fill="'+d+'"/>'
+       +'<path d="M96 96 l0 18 M106 94 l0 20 M116 92 l0 22" stroke="'+d+'" stroke-width="3" stroke-linecap="round"/>'
+       +'<path d="M14 112 Q50 124 80 118" stroke="'+d+'" stroke-width="3" fill="none" stroke-linecap="round"/><path d="M22 114 l4 8 l5 -7 M42 119 l4 8 l5 -7 M62 121 l4 8 l5 -7" fill="#fff"/>'+eye(70,92,8.5);
+    } else if(sp==='dunk'){
+      s+='<path d="M236 98 Q270 62 292 54 Q282 100 292 148 Q268 122 236 110Z" fill="'+b+'"/>'
+       +'<ellipse cx="170" cy="102" rx="78" ry="34" fill="'+b+'"/><ellipse cx="170" cy="118" rx="52" ry="14" fill="'+l+'"/>'
+       +'<path d="M150 70 Q176 36 206 72Z" fill="'+d+'"/><path d="M160 128 L136 156 L186 134Z" fill="'+d+'"/>'
+       +'<path d="M30 100 Q34 52 96 52 Q150 54 150 106 Q150 132 96 130 Q40 128 30 100Z" fill="'+d+'"/>'
+       +'<path d="M52 72 Q96 60 134 78 M96 56 L96 96" stroke="'+b+'" stroke-width="3.4" fill="none" stroke-linecap="round"/>'
+       +'<path d="M30 104 Q70 126 126 108" stroke="#fff" stroke-width="4" fill="none" stroke-linecap="round"/><path d="M42 106 l5 10 l5 -9 M66 114 l5 10 l5 -10 M92 116 l5 10 l5 -10" fill="#fff"/>'+eye(78,84,10)+'<path d="M62 70 q14 -9 28 -2" stroke="'+b+'" stroke-width="3.5" fill="none" stroke-linecap="round"/>';
+    } else if(sp==='archelon'){
+      s+='<path d="M232 108 Q262 114 282 106 Q268 128 234 124Z" fill="'+b+'"/>'
+       +'<path d="M116 118 Q64 156 36 150 Q70 118 112 104Z" fill="'+b+'"/><path d="M196 126 Q236 162 268 150 Q238 118 204 112Z" fill="'+d+'"/>'
+       +'<ellipse cx="156" cy="92" rx="88" ry="52" fill="'+d+'"/><ellipse cx="156" cy="90" rx="74" ry="40" fill="'+b+'"/>'
+       +'<path d="M156 50 V130 M110 62 Q120 90 110 120 M202 62 Q192 90 202 120 M84 90 H228" stroke="'+d+'" stroke-width="4" fill="none" stroke-linecap="round"/>'
+       +'<ellipse cx="66" cy="108" rx="30" ry="22" fill="'+l+'"/><path d="M36 112 q-14 4 -8 14 q12 4 24 -2Z" fill="'+d+'"/>'+eye(62,100,8)+'<path d="M44 120 Q60 128 78 120" stroke="'+d+'" stroke-width="3" fill="none" stroke-linecap="round"/>';
+    } else if(sp==='tylo'){
+      s+='<path d="M238 100 Q278 84 296 46 Q292 98 296 146 Q276 116 238 112Z" fill="'+b+'"/>'
+       +'<ellipse cx="164" cy="102" rx="84" ry="28" fill="'+b+'"/><ellipse cx="154" cy="115" rx="58" ry="13" fill="'+l+'"/>'
+       +'<path d="M140 78 L170 56 L196 80Z" fill="'+d+'"/>'
+       +'<ellipse cx="112" cy="130" rx="24" ry="8" fill="'+d+'" transform="rotate(25 112 130)"/><ellipse cx="206" cy="130" rx="24" ry="8" fill="'+d+'" transform="rotate(-25 206 130)"/><ellipse cx="150" cy="134" rx="20" ry="7" fill="'+d+'" transform="rotate(10 150 134)"/>'
+       +'<path d="M4 98 Q40 82 90 86 L104 112 Q44 120 4 98Z" fill="'+b+'"/><path d="M8 102 Q50 118 104 108" stroke="'+d+'" stroke-width="3.4" fill="none" stroke-linecap="round"/>'
+       +'<path d="M20 106 l4 8 l5 -7 M44 113 l4 8 l5 -8 M70 114 l4 8 l5 -8" fill="#fff"/>'+eye(84,92,8.5)+'<circle cx="12" cy="96" r="3" fill="'+d+'"/>';
     } else {
       s+='<path d="M222 112 Q258 116 282 102 Q274 138 226 134Z" fill="'+b+'"/>'
        +'<ellipse cx="150" cy="150" rx="34" ry="12" fill="'+d+'" transform="rotate(-20 150 150)"/><ellipse cx="208" cy="150" rx="34" ry="12" fill="'+d+'" transform="rotate(20 208 150)"/>'
@@ -810,7 +844,7 @@
   if(/sheet/.test(location.search)){
     var sh=$('sheet'); sh.style.display='flex';
     SPKEYS.forEach(function(k){var c=document.createElement('div'); c.innerHTML=SP[k].svg(); sh.appendChild(c);});
-    MSP.forEach(function(s,i){var c=document.createElement('div'); c.style.background='#6cc4f0'; c.innerHTML=MR(s,i); sh.appendChild(c);});
+    MSP.forEach(function(s,i){var c=document.createElement('div'); c.style.background='#6cc4f0'; c.innerHTML=MR(s,i%6); sh.appendChild(c);});
     var hh=document.createElement('div'); hh.style.cssText='width:200px;height:290px'; hh.innerHTML=HERO; sh.appendChild(hh);
   }
   window.__dino={done:done,dinos:function(){return dinos},target:function(){return target},fire:fire,start:start,home:home,got:function(){return got},mode:function(){return mode},T:T,F:F,castAt:castAt};
